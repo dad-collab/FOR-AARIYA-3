@@ -22,6 +22,60 @@
   var compatTimer = null, compatMsgTimer = null, compatResultTimer = null;
   var secretTimer = null, secretDone = false;
 
+  /* ---------- Background theme song (Ishq Wala Love) ---------- */
+  // Soft loop at 13% volume, fade-in, never restarts between screens.
+  // Browsers block autoplay, so music starts on the user's first tap/keypress.
+  var MUSIC_VOLUME = 0.13;
+  var musicAudio = document.getElementById("bgMusic");
+  var musicBtn = document.getElementById("musicToggleBtn");
+  var musicOn = true, musicStarted = false, musicFadeTimer = null;
+  try { musicOn = sessionStorage.getItem("love-exe-music") !== "off"; } catch (e) {}
+  function updateMusicBtn() {
+    musicBtn.classList.toggle("playing", musicOn && musicStarted && !musicAudio.paused);
+    musicBtn.classList.toggle("muted", !musicOn);
+    musicBtn.innerHTML = (musicOn ? "🎵 " : "🔇 ") + '<span class="music-bars" aria-hidden="true"><i></i><i></i><i></i></span>';
+    musicBtn.title = musicOn ? "Background music: On (tap to mute)" : "Background music: Off (tap to play)";
+  }
+  function fadeMusicIn() {
+    clearInterval(musicFadeTimer);
+    musicAudio.volume = 0;
+    var v = 0;
+    musicFadeTimer = setInterval(function () {
+      v = Math.min(MUSIC_VOLUME, v + 0.01);
+      musicAudio.volume = v;
+      if (v >= MUSIC_VOLUME) clearInterval(musicFadeTimer);
+    }, 230); // ~3s gentle fade-in, no sudden volume jump
+  }
+  function startMusic(e) {
+    // A tap on the music button itself is a toggle, not an auto-start.
+    if (e && e.target && e.target.closest && e.target.closest("#musicToggleBtn")) return;
+    if (!musicOn || musicStarted) return;
+    musicStarted = true;
+    var p = musicAudio.play();
+    if (p && p.catch) p.catch(function () { musicStarted = false; }); // autoplay blocked — retry on next interaction
+    else fadeMusicIn();
+    if (p && p.then) p.then(fadeMusicIn, function () {});
+    updateMusicBtn();
+  }
+  function toggleMusic() {
+    musicOn = !musicOn;
+    try { sessionStorage.setItem("love-exe-music", musicOn ? "on" : "off"); } catch (e) {}
+    if (musicOn) {
+      if (!musicStarted) { startMusic(); }
+      else { var p = musicAudio.play(); if (p && p.catch) p.catch(function () {}); fadeMusicIn(); }
+    } else {
+      clearInterval(musicFadeTimer);
+      musicAudio.pause();
+    }
+    updateMusicBtn();
+  }
+  musicBtn.addEventListener("click", toggleMusic);
+  musicAudio.addEventListener("play", updateMusicBtn);
+  musicAudio.addEventListener("pause", updateMusicBtn);
+  document.addEventListener("pointerdown", startMusic);
+  document.addEventListener("keydown", startMusic);
+  updateMusicBtn();
+
   function show(name) {
     Object.keys(screens).forEach(function (k) { screens[k].classList.toggle("active", k === name); });
     var step = stepFor[name] || 1;

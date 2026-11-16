@@ -125,6 +125,17 @@ footer .tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;fo
   .btn-primary{width:100%}
   .letter-body{font-size:16px;padding:20px}
 }
+/* Background music toggle — small, elegant, same design system */
+.music-btn{display:inline-flex;align-items:center;gap:6px}
+.music-bars{display:inline-flex;align-items:flex-end;gap:2px;height:14px}
+.music-bars i{width:3px;background:var(--rose-deep);border-radius:2px;height:5px}
+.music-btn.playing .music-bars i{animation:musicBars .9s ease-in-out infinite}
+.music-bars i:nth-child(2){animation-delay:.2s}
+.music-bars i:nth-child(3){animation-delay:.4s}
+@keyframes musicBars{0%,100%{height:5px}50%{height:14px}}
+.music-btn.muted{opacity:.55}
+.music-btn.muted .music-bars i{animation:none;height:5px}
+
 /* Phase 7 — The Final Surprise, same design system */
 .final-card .btn-ghost{margin-top:14px}
 .cert-card{background:rgba(255,255,255,.82);border:3px solid var(--rose);

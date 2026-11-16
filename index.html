@@ -25,9 +25,13 @@
         <li data-step="3"><span>3</span><em>Coming soon</em></li>
         <li data-step="4"><span>4</span><em>Test</em></li>
       </ol>
+      <button class="btn-ghost music-btn" id="musicToggleBtn" type="button" title="Background music on/off">🎵 <span class="music-bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
       <button class="btn-ghost" id="restartBtn" type="button" title="Start again">↺ Restart</button>
     </div>
   </header>
+
+  <!-- Background theme song: Ishq Wala Love — soft loop, 13% volume, starts after first interaction -->
+  <audio id="bgMusic" src="theme-song.mp3" loop preload="auto"></audio>
 
   <main>
     <!-- 1 · LANDING -->
