@@ -124,6 +124,27 @@ footer .tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;fo
   .btn-primary{width:100%}
   .letter-body{font-size:16px;padding:20px}
 }
+/* Phase 5 — Crazy Challenge, same design system */
+.crazy-card .btn-ghost{margin-top:14px}
+.heart-arena{position:relative;height:300px;background:rgba(255,255,255,.5);border:1px dashed #ffb3d1;
+  border-radius:20px;overflow:hidden;margin:10px 0 4px;touch-action:manipulation}
+.catch-heart{position:absolute;left:40%;top:40%;font-size:52px;line-height:1;background:transparent;border:0;
+  cursor:pointer;padding:6px;transition:left .45s ease,top .45s ease;animation:beat 1s ease-in-out infinite}
+.mystery-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 4px}
+.mystery-card{border:2px solid #ffd3e6;background:rgba(255,255,255,.78);color:var(--ink);cursor:pointer;
+  font-family:inherit;font-weight:700;font-size:44px;padding:26px 10px;border-radius:18px;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.mystery-card:hover{transform:translateY(-2px) scale(1.02);border-color:var(--rose)}
+.mystery-card:disabled{cursor:default}
+.mystery-card.revealed-wrong{opacity:.55;border-color:#e9c9dc}
+.mystery-card.revealed-aman{border-color:var(--rose-deep);
+  background:linear-gradient(135deg,#ffe3ef,#f3e8ff);box-shadow:0 12px 26px rgba(232,67,147,.28)}
+.mystery-card .mystery-sub{display:block;font-size:13px;margin-top:8px;color:var(--muted)}
+.laugh-msg{font-family:Georgia,"Times New Roman",serif;font-size:clamp(19px,3.4vw,23px);font-weight:700;
+  line-height:1.55;color:var(--ink);background:rgba(255,255,255,.72);border:1px solid #ffe0ee;
+  border-radius:20px;padding:22px;margin:8px 0 22px}
+#laughReaction{min-height:40px}
+
 /* Phase 4 — Secret Message, same design system */
 .secret-card .btn-ghost{margin-top:14px}
 .secret-card .envelope{margin-top:10px}

@@ -224,15 +224,69 @@
       </div>
     </section>
 
-    <!-- 10 · PHASE 5 PLACEHOLDER (not built yet) -->
-    <section class="screen" id="screen-phase5" aria-label="Next surprise">
+    <!-- 10 · PHASE 5: AARIYA'S CRAZY CHALLENGE -->
+    <section class="screen" id="screen-phase5" aria-label="Crazy challenge">
+      <div class="card crazy-card">
+        <!-- Intro -->
+        <div class="compat-panel active" id="crazyIntro">
+          <p class="badge">🎮 AARIYA'S CRAZY CHALLENGE</p>
+          <h2>Aariya, Ab Tera Real Test Hoga! 😂</h2>
+          <p class="subtitle">Questions toh bahut ho gaye, ab kuch karke dikha madam!</p>
+          <p class="warning">Challenge Level: IMPOSSIBLE 😈</p>
+          <button class="btn-primary glow" id="crazyStartBtn" type="button">CHALLENGE ACCEPTED 🎮</button>
+          <button class="btn-ghost" id="crazyBackBtn" type="button">← Secret letter wapas dekho</button>
+        </div>
+        <!-- Challenge 1: Catch The Heart -->
+        <div class="compat-panel" id="crazyGame1">
+          <p class="badge">❤️ CHALLENGE 1 / 3</p>
+          <h2>Catch The Heart! ❤️</h2>
+          <p class="subtitle">Dil ko 5 baar pakdo — woh bhaagta rahega! 😂</p>
+          <p class="q-count" id="heartCounter">Hearts caught: 0/5</p>
+          <div class="heart-arena" id="heartArena">
+            <button class="catch-heart" id="catchHeart" type="button" aria-label="Catch the heart">❤️</button>
+          </div>
+          <div class="reaction" id="heartMsg" role="status" aria-live="polite"></div>
+        </div>
+        <!-- Challenge 2: Find Aman -->
+        <div class="compat-panel" id="crazyGame2">
+          <p class="badge">😂 CHALLENGE 2 / 3</p>
+          <h2>Guess Karo Aman Kahan Hai?</h2>
+          <p class="subtitle">4 cards mein se ek mein Aman chhupa hai. Dhoondh ke dikhao! 👀</p>
+          <p class="q-count" id="guessAttempts">Attempts: 0/5</p>
+          <div class="mystery-grid" id="mysteryGrid"></div>
+          <div class="reaction" id="guessMsg" role="status" aria-live="polite"></div>
+        </div>
+        <!-- Challenge 3: Don't Laugh -->
+        <div class="compat-panel" id="crazyGame3">
+          <p class="badge">🤣 CHALLENGE 3 / 3</p>
+          <h2>Don't Laugh Challenge! 🤣</h2>
+          <p class="subtitle">Ye sirf mazaak hai madam — hasna allowed hai! 😂</p>
+          <p class="laugh-msg" id="laughMsg"></p>
+          <button class="btn-primary glow" id="laughBtn" type="button">HAHAHA 😂</button>
+          <div class="reaction" id="laughReaction" role="status" aria-live="polite"></div>
+        </div>
+        <!-- Final Result -->
+        <div class="compat-panel" id="crazyResult">
+          <p class="big-emoji">🏆</p>
+          <h2>MISSION COMPLETED AARIYA! 🏆</h2>
+          <p class="subtitle">Madam, tumne toh saare challenges complete kar liye! Aman impressed hai 😂</p>
+          <div class="stats" id="crazyStats"></div>
+          <p class="final-msg">Ab final surprise ka time aa gaya hai! 🎁</p>
+          <button class="btn-primary glow" id="crazyFinalBtn" type="button">FINAL SURPRISE UNLOCK KARO 🎁</button>
+          <button class="btn-ghost" id="crazyReplayBtn" type="button">↺ Challenges phir se khelo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 · PHASE 6 PLACEHOLDER (not built yet) -->
+    <section class="screen" id="screen-phase6" aria-label="Next surprise">
       <div class="card coming-card">
         <p class="big-emoji">🎁</p>
-        <h2>Phase 5 surprise is coming soon, Aariya!</h2>
-        <p class="subtitle">Phase 5 abhi ban raha hai — Aman kuch aur plan kar raha hai 👀<br>Tab tak apna secret letter sambhal ke rakhna 😂</p>
+        <h2>Phase 6 surprise is coming soon, Aariya!</h2>
+        <p class="subtitle">Phase 6 abhi ban raha hai — Aman kuch aur plan kar raha hai 👀<br>Tab tak apna Mission Completed trophy sambhal ke rakhna 😂</p>
         <div class="coming-actions">
-          <button class="btn-primary" id="next5BackBtn" type="button">← Secret letter wapas dekho</button>
-          <button class="btn-ghost" id="next5RestartBtn" type="button">↺ Shuru se dekho</button>
+          <button class="btn-primary" id="next6BackBtn" type="button">← Challenges result wapas dekho</button>
+          <button class="btn-ghost" id="next6RestartBtn" type="button">↺ Shuru se dekho</button>
         </div>
       </div>
     </section>

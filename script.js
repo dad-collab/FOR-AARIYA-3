@@ -13,9 +13,10 @@
     compat: document.getElementById("screen-compat"),
     next: document.getElementById("screen-next"),
     phase5: document.getElementById("screen-phase5"),
+    phase6: document.getElementById("screen-phase6"),
   };
   var progressItems = Array.prototype.slice.call(document.querySelectorAll("#progress li"));
-  var stepFor = { landing: 1, letter: 2, loading: 2, coming: 3, challenge: 4, quiz: 4, result: 4, compat: 4, next: 4, phase5: 4 };
+  var stepFor = { landing: 1, letter: 2, loading: 2, coming: 3, challenge: 4, quiz: 4, result: 4, compat: 4, next: 4, phase5: 4, phase6: 4 };
   var loadingTimer = null;
   var compatTimer = null, compatMsgTimer = null, compatResultTimer = null;
   var secretTimer = null, secretDone = false;
@@ -72,6 +73,7 @@
     clearTimeout(quizTimer);
     clearInterval(secretTimer);
     resetSecret();
+    resetCrazy();
     showCompatPanel("compatEntry");
     var fill = document.getElementById("loadFill");
     var pct = document.getElementById("loadPct");
@@ -455,8 +457,181 @@
     });
   });
   document.getElementById("secretNextBtn").addEventListener("click", function () { show("phase5"); });
-  document.getElementById("next5BackBtn").addEventListener("click", function () { showSecretPanel("secretLetter"); show("next"); });
-  document.getElementById("next5RestartBtn").addEventListener("click", restart);
+
+  /* ---------- Phase 5: Aariya's Crazy Challenge ---------- */
+  var heartsCaught = 0, guessAttempts = 0, laughIndex = 0;
+  var heartMoveTimer = null, amanCard = null, game2Locked = false;
+  var CATCH_MSGS = ["Wah madam! 👏", "Almost pakad liya!", "Wah madam! 👏", "Ek aur! Bas ek aur! 😂"];
+  var MISS_MSGS = ["Arey miss ho gaya! 😂", "Thoda fast Aariya!", "Arey miss ho gaya! 😂", "Dil bhaag gaya, phir try karo! 😂"];
+  var LAUGH_MSGS = [
+    "Aman ka dimaag kabhi kabhi airplane mode pe rehta hai.",
+    "Aariya ko tang karna Aman ka favourite hobby hai.",
+    "Dono ki bakchodi ka koi end nahi.",
+  ];
+  var LAUGH_REACTIONS = [
+    "Aman: Dekha, hasi aa hi gayi! 🤣",
+    "Aman: Don't laugh challenge FAIL! 😂",
+    "Aman: Ye toh hasne wala hi tha! 😂",
+    "Aman: Bas bas, pet dukh jayega! 🤣",
+  ];
+  var DECOYS = ["🙄", "😂", "👻", "🤪"];
+  function showCrazyPanel(id) {
+    ["crazyIntro", "crazyGame1", "crazyGame2", "crazyGame3", "crazyResult"].forEach(function (p) {
+      document.getElementById(p).classList.toggle("active", p === id);
+    });
+  }
+  function resetCrazy() {
+    clearInterval(heartMoveTimer);
+    heartsCaught = 0; guessAttempts = 0; laughIndex = 0; amanCard = null;
+    document.getElementById("heartCounter").textContent = "Hearts caught: 0/5";
+    document.getElementById("heartMsg").textContent = "";
+    document.getElementById("heartMsg").classList.remove("show");
+    document.getElementById("guessAttempts").textContent = "Attempts: 0/5";
+    document.getElementById("guessMsg").textContent = "";
+    document.getElementById("guessMsg").classList.remove("show");
+    document.getElementById("laughReaction").textContent = "";
+    document.getElementById("laughReaction").classList.remove("show");
+    showCrazyPanel("crazyIntro");
+  }
+  function moveHeart() {
+    var arena = document.getElementById("heartArena");
+    var heart = document.getElementById("catchHeart");
+    var w = arena.clientWidth - 70, h = arena.clientHeight - 70;
+    heart.style.left = Math.max(0, Math.floor(Math.random() * w)) + "px";
+    heart.style.top = Math.max(0, Math.floor(Math.random() * h)) + "px";
+  }
+  function startGame1() {
+    heartsCaught = 0;
+    document.getElementById("heartCounter").textContent = "Hearts caught: 0/5";
+    var msg = document.getElementById("heartMsg");
+    msg.textContent = "Dil bhaag raha hai — pakdo use! ❤️";
+    msg.classList.add("show");
+    showCrazyPanel("crazyGame1");
+    show("phase5");
+    moveHeart();
+    clearInterval(heartMoveTimer);
+    heartMoveTimer = setInterval(moveHeart, 1100);
+  }
+  document.getElementById("catchHeart").addEventListener("click", function (e) {
+    e.stopPropagation();
+    heartsCaught++;
+    document.getElementById("heartCounter").textContent = "Hearts caught: " + heartsCaught + "/5";
+    var msg = document.getElementById("heartMsg");
+    msg.textContent = CATCH_MSGS[Math.floor(Math.random() * CATCH_MSGS.length)];
+    msg.classList.add("show");
+    confetti();
+    if (heartsCaught >= 5) {
+      clearInterval(heartMoveTimer);
+      msg.textContent = "Wah madam! 👏 5/5 hearts pakad liye!";
+      setTimeout(startGame2, 1200);
+    } else {
+      moveHeart();
+    }
+  });
+  document.getElementById("heartArena").addEventListener("click", function () {
+    var msg = document.getElementById("heartMsg");
+    msg.textContent = MISS_MSGS[Math.floor(Math.random() * MISS_MSGS.length)];
+    msg.classList.add("show");
+  });
+  function shuffleAman() {
+    var hidden = Array.prototype.filter.call(document.querySelectorAll("#mysteryGrid .mystery-card"), function (c) {
+      return !c.disabled;
+    });
+    amanCard = hidden[Math.floor(Math.random() * hidden.length)];
+  }
+  function startGame2() {
+    guessAttempts = 0;
+    game2Locked = false;
+    document.getElementById("guessAttempts").textContent = "Attempts: 0/5";
+    var msg = document.getElementById("guessMsg");
+    msg.textContent = "";
+    msg.classList.remove("show");
+    var grid = document.getElementById("mysteryGrid");
+    grid.innerHTML = "";
+    for (var i = 0; i < 4; i++) {
+      (function (i) {
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "mystery-card";
+        b.innerHTML = "?<span class='mystery-sub'>Card " + (i + 1) + "</span>";
+        b.addEventListener("click", function () { pickCard(b); });
+        grid.appendChild(b);
+      })(i);
+    }
+    shuffleAman();
+    showCrazyPanel("crazyGame2");
+    show("phase5");
+  }
+  function pickCard(card) {
+    if (card.disabled || game2Locked) return;
+    guessAttempts++;
+    document.getElementById("guessAttempts").textContent = "Attempts: " + guessAttempts + "/5";
+    var msg = document.getElementById("guessMsg");
+    card.disabled = true;
+    if (card === amanCard) {
+      game2Locked = true;
+      card.classList.add("revealed-aman");
+      card.innerHTML = "😎<span class='mystery-sub'>AMAN MIL GAYA!</span>";
+      msg.textContent = "Finally! Aman mil gaya 😂";
+      msg.classList.add("show");
+      confetti();
+      setTimeout(startGame3, 1400);
+    } else {
+      card.classList.add("revealed-wrong");
+      card.innerHTML = DECOYS[Math.floor(Math.random() * DECOYS.length)] + "<span class='mystery-sub'>Yahan nahi!</span>";
+      msg.textContent = "Galat jagah dhoondh rahi ho madam! 🤣";
+      msg.classList.add("show");
+      shuffleAman(); // Aman hides somewhere else among the remaining cards
+    }
+  }
+  function startGame3() {
+    laughIndex = 0;
+    document.getElementById("laughMsg").textContent = LAUGH_MSGS[0];
+    var r = document.getElementById("laughReaction");
+    r.textContent = "";
+    r.classList.remove("show");
+    showCrazyPanel("crazyGame3");
+    show("phase5");
+  }
+  document.getElementById("laughBtn").addEventListener("click", function () {
+    if (laughIndex >= LAUGH_MSGS.length) return;
+    var r = document.getElementById("laughReaction");
+    r.textContent = LAUGH_REACTIONS[Math.floor(Math.random() * LAUGH_REACTIONS.length)];
+    r.classList.add("show");
+    confetti();
+    laughIndex++;
+    if (laughIndex >= LAUGH_MSGS.length) {
+      setTimeout(showCrazyResult, 1200);
+    } else {
+      setTimeout(function () {
+        document.getElementById("laughMsg").textContent = LAUGH_MSGS[laughIndex];
+        r.textContent = "";
+        r.classList.remove("show");
+      }, 1200);
+    }
+  });
+  function showCrazyResult() {
+    var box = document.getElementById("crazyStats");
+    box.innerHTML = "";
+    [
+      { label: "❤️ Hearts Caught", value: "5/5" },
+      { label: "😎 Correct Guess", value: "Aman " + guessAttempts + (guessAttempts === 1 ? " attempt" : " attempts") + " mein mil gaya 😂" },
+      { label: "🏆 Challenges Completed", value: "3/3" },
+    ].forEach(function (s) {
+      var row = document.createElement("div");
+      row.className = "stat-row";
+      row.innerHTML = '<label><span>' + s.label + '</span><b>' + s.value + '</b></label>';
+      box.appendChild(row);
+    });
+    showCrazyPanel("crazyResult");
+    show("phase5");
+    confetti();
+  }
+  document.getElementById("crazyStartBtn").addEventListener("click", startGame1);
+  document.getElementById("crazyBackBtn").addEventListener("click", function () { showSecretPanel("secretLetter"); show("next"); });
+  document.getElementById("crazyFinalBtn").addEventListener("click", function () { show("phase6"); });
+  document.getElementById("crazyReplayBtn").addEventListener("click", startGame1);
+  document.getElementById("next6BackBtn").addEventListener("click", function () { showCrazyPanel("crazyResult"); show("phase5"); });
+  document.getElementById("next6RestartBtn").addEventListener("click", restart);
 
   document.getElementById("openBtn").addEventListener("click", openLetter);
   document.getElementById("envelopeBtn").addEventListener("click", openLetter);
