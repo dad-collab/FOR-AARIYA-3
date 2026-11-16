@@ -14,9 +14,10 @@
     next: document.getElementById("screen-next"),
     phase5: document.getElementById("screen-phase5"),
     phase6: document.getElementById("screen-phase6"),
+    phase7: document.getElementById("screen-phase7"),
   };
   var progressItems = Array.prototype.slice.call(document.querySelectorAll("#progress li"));
-  var stepFor = { landing: 1, letter: 2, loading: 2, coming: 3, challenge: 4, quiz: 4, result: 4, compat: 4, next: 4, phase5: 4, phase6: 4 };
+  var stepFor = { landing: 1, letter: 2, loading: 2, coming: 3, challenge: 4, quiz: 4, result: 4, compat: 4, next: 4, phase5: 4, phase6: 4, phase7: 4 };
   var loadingTimer = null;
   var compatTimer = null, compatMsgTimer = null, compatResultTimer = null;
   var secretTimer = null, secretDone = false;
@@ -75,6 +76,7 @@
     resetSecret();
     resetCrazy();
     resetTwist();
+    resetFinal();
     showCompatPanel("compatEntry");
     var fill = document.getElementById("loadFill");
     var pct = document.getElementById("loadPct");
@@ -707,6 +709,93 @@
     } else {
       document.getElementById("msgHint").hidden = false;
     }
+  });
+
+  /* ---------- Phase 7: The Final Surprise For Aariya ---------- */
+  function showFinalPanel(id) {
+    ["finalWelcome", "finalCard", "finalCert"].forEach(function (p) {
+      document.getElementById(p).classList.toggle("active", p === id);
+    });
+  }
+  function resetFinal() {
+    document.getElementById("lastMsgText").hidden = true;
+    showFinalPanel("finalWelcome");
+  }
+  function drawCertificate() {
+    var c = document.createElement("canvas");
+    c.width = 1200; c.height = 850;
+    var x = c.getContext("2d");
+    var g = x.createLinearGradient(0, 0, 1200, 850);
+    g.addColorStop(0, "#ffe3ef"); g.addColorStop(0.5, "#f3e8ff"); g.addColorStop(1, "#fff3e2");
+    x.fillStyle = g; x.fillRect(0, 0, 1200, 850);
+    x.strokeStyle = "#e84393"; x.lineWidth = 6; x.strokeRect(24, 24, 1152, 802);
+    x.strokeStyle = "#8b7cf6"; x.lineWidth = 2; x.strokeRect(40, 40, 1120, 770);
+    x.fillStyle = "#ff6b9d"; x.font = "40px Georgia, serif";
+    x.fillText("♥", 70, 95); x.fillText("♥", 1090, 95); x.fillText("♥", 70, 800); x.fillText("♥", 1090, 800);
+    x.textAlign = "center";
+    x.fillStyle = "#e84393"; x.font = "bold 54px Georgia, serif";
+    x.fillText("OFFICIAL CERTIFICATE", 600, 150);
+    x.fillStyle = "#6d5566"; x.font = "italic 28px Georgia, serif";
+    x.fillText("This Certificate Is Awarded To", 600, 205);
+    x.fillStyle = "#e84393"; x.font = "bold 96px Georgia, serif";
+    x.fillText("AARIYA", 600, 310);
+    x.strokeStyle = "#e84393"; x.lineWidth = 2;
+    x.beginPath(); x.moveTo(400, 340); x.lineTo(800, 340); x.stroke();
+    x.fillStyle = "#4a3340"; x.font = "bold 34px Georgia, serif";
+    x.fillText("Successfully Tolerating Aman!", 600, 395);
+    x.fillStyle = "#8b7cf6"; x.font = "bold 24px Georgia, serif";
+    x.fillText("SPECIAL SKILLS", 600, 455);
+    x.fillStyle = "#4a3340"; x.font = "26px Georgia, serif";
+    x.fillText("Unlimited Bakchodi  •  Professional Drama", 600, 495);
+    x.fillText("Friendship Management  •  Aman Ko Jhelne Ki Special Ability", 600, 535);
+    x.fillStyle = "#4a3340"; x.font = "28px Georgia, serif";
+    x.fillText("Issued By: AMAN", 600, 615);
+    x.fillStyle = "#e84393"; x.font = "bold 32px Georgia, serif";
+    x.fillText("♥  BEST FRIEND FOREVER  ♥", 600, 685);
+    x.fillStyle = "#8a6d80"; x.font = "italic 22px Georgia, serif";
+    x.fillText("LOVE.exe — A Little Surprise From Your Best Friend!", 600, 760);
+    return c;
+  }
+  document.getElementById("toPhase7Btn").addEventListener("click", function () {
+    showFinalPanel("finalWelcome");
+    show("phase7");
+    confetti();
+    setTimeout(confetti, 400);
+    playTone(523, 0.18, 0); playTone(659, 0.18, 0.15); playTone(784, 0.3, 0.3);
+  });
+  document.getElementById("finalBackBtn").addEventListener("click", function () { showTwistPanel("twistReveal"); show("phase6"); });
+  document.getElementById("openFinalBtn").addEventListener("click", function () {
+    showFinalPanel("finalCard");
+    show("phase7");
+    confetti();
+  });
+  document.getElementById("showCertBtn").addEventListener("click", function () {
+    showFinalPanel("finalCert");
+    show("phase7");
+    confetti();
+    setTimeout(confetti, 350);
+    setTimeout(confetti, 700);
+    playTone(523, 0.18, 0); playTone(659, 0.18, 0.15); playTone(784, 0.18, 0.3); playTone(1047, 0.35, 0.45);
+  });
+  document.getElementById("finalAgainBtn").addEventListener("click", restart);
+  document.getElementById("lastMsgBtn").addEventListener("click", function () {
+    document.getElementById("lastMsgText").hidden = false;
+  });
+  document.getElementById("downloadCertBtn").addEventListener("click", function () {
+    try {
+      var canvas = drawCertificate();
+      canvas.toBlob(function (blob) {
+        if (!blob) return;
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "Aariya-Certificate.png";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      }, "image/png");
+    } catch (e) { /* download failed — the on-screen certificate is still there */ }
   });
 
   document.getElementById("openBtn").addEventListener("click", openLetter);
