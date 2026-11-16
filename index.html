@@ -23,6 +23,7 @@
         <li data-step="1" class="active"><span>1</span><em>Surprise</em></li>
         <li data-step="2"><span>2</span><em>Letter</em></li>
         <li data-step="3"><span>3</span><em>Coming soon</em></li>
+        <li data-step="4"><span>4</span><em>Test</em></li>
       </ol>
       <button class="btn-ghost" id="restartBtn" type="button" title="Start again">↺ Restart</button>
     </div>
@@ -84,10 +85,65 @@
       <div class="card coming-card">
         <p class="big-emoji">👀</p>
         <h2>Something interesting is coming, Aariya!</h2>
-        <p class="subtitle">Phase 2 mein aur surprises, funny questions aur leg-pulling aane wali hai.<br>Tab tak ye letter sambhal ke rakhna 😂</p>
+        <p class="subtitle">Good news, madam — Phase 2 aa gaya hai! Funny questions aur leg-pulling ready hai 😂</p>
         <div class="coming-actions">
-          <button class="btn-primary" id="replayBtn" type="button">↺ Phir se dekho</button>
+          <button class="btn-primary glow" id="challengeBtn" type="button">START AARIYA'S TEST 😎</button>
+          <button class="btn-ghost" id="replayBtn" type="button">↺ Phir se dekho</button>
           <button class="btn-ghost" id="readAgainBtn" type="button">💌 Letter phir se padho</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · PHASE 2 WELCOME -->
+    <section class="screen" id="screen-challenge" aria-label="Challenge welcome">
+      <div class="card challenge-card">
+        <p class="badge">😂 AARIYA'S FUNNY CHALLENGE</p>
+        <h2>Welcome to Aariya's Test! 😂</h2>
+        <p class="subtitle">Let's see how well you know yourself, madam!</p>
+        <p class="prepared">Prepared by your best friend Aman ❤️</p>
+        <p class="quiz-note">6 funny questions · Ek baar mein ek · Koi galat jawab nahi, bas bakchodi 😂</p>
+        <button class="btn-primary glow" id="startTestBtn" type="button">START MY TEST 😎</button>
+        <button class="btn-ghost" id="challengeBackBtn" type="button">← Pehle wala screen</button>
+      </div>
+    </section>
+
+    <!-- 6 · PHASE 2 QUIZ -->
+    <section class="screen" id="screen-quiz" aria-label="Quiz">
+      <div class="card quiz-card">
+        <p class="q-count" id="quizCount">Question 1 of 6</p>
+        <div class="quizbar"><div class="quizbar-fill" id="quizFill"></div></div>
+        <h2 id="quizQuestion">Question</h2>
+        <div class="options" id="quizOptions"></div>
+        <div class="reaction" id="quizReaction" role="status" aria-live="polite"></div>
+        <button class="btn-ghost" id="quizRestartBtn" type="button">↺ Challenge restart karo</button>
+      </div>
+    </section>
+
+    <!-- 7 · PHASE 2 RESULT -->
+    <section class="screen" id="screen-result" aria-label="Result">
+      <div class="card result-card">
+        <p class="big-emoji">🎉</p>
+        <h2>TEST COMPLETED AARIYA! 🎉</h2>
+        <p class="subtitle">Your Friendship Personality Report is Ready!</p>
+        <p class="fun-note">⚠️ Ye report sirf mazaak ke liye hai — Aman ne khud banayi hai 😂</p>
+        <div class="stats" id="resultStats"></div>
+        <p class="final-msg">Congratulations Aariya! You have officially passed Aman ki Bakchodi Test! 😂❤️</p>
+        <div class="coming-actions">
+          <button class="btn-primary glow" id="unlockBtn" type="button">UNLOCK NEXT SURPRISE 🎁</button>
+          <button class="btn-ghost" id="retakeBtn" type="button">↺ Test dobara do</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · PHASE 3 PLACEHOLDER (not built yet) -->
+    <section class="screen" id="screen-next" aria-label="Next surprise">
+      <div class="card coming-card">
+        <p class="big-emoji">🎁</p>
+        <h2>Next surprise is coming soon, Aariya!</h2>
+        <p class="subtitle">Phase 3 abhi ban raha hai — Aman kuch aur plan kar raha hai 👀<br>Tab tak apna Friendship Report sambhal ke rakhna 😂</p>
+        <div class="coming-actions">
+          <button class="btn-primary" id="nextBackBtn" type="button">← Result wapas dekho</button>
+          <button class="btn-ghost" id="nextRestartBtn" type="button">↺ Shuru se dekho</button>
         </div>
       </div>
     </section>
