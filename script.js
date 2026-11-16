@@ -74,6 +74,7 @@
     clearInterval(secretTimer);
     resetSecret();
     resetCrazy();
+    resetTwist();
     showCompatPanel("compatEntry");
     var fill = document.getElementById("loadFill");
     var pct = document.getElementById("loadPct");
@@ -630,8 +631,83 @@
   document.getElementById("crazyBackBtn").addEventListener("click", function () { showSecretPanel("secretLetter"); show("next"); });
   document.getElementById("crazyFinalBtn").addEventListener("click", function () { show("phase6"); });
   document.getElementById("crazyReplayBtn").addEventListener("click", startGame1);
-  document.getElementById("next6BackBtn").addEventListener("click", function () { showCrazyPanel("crazyResult"); show("phase5"); });
-  document.getElementById("next6RestartBtn").addEventListener("click", restart);
+
+  /* ---------- Phase 6: The Unexpected Twist ---------- */
+  // MESSAGE LINK — Aman sets this to his real chat/profile link when he wants
+  // the "AMAN KO MESSAGE KARO" button to open somewhere (e.g. WhatsApp/Instagram).
+  // Leave empty ("") until then: the button shows a friendly "not set yet" note
+  // instead of opening a made-up link. Never invent a phone number here.
+  var MESSAGE_LINK = "";
+  var soundOn = true, audioCtx = null, twistTimer = null;
+  function playTone(freq, dur, delay) {
+    if (!soundOn) return;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var t = audioCtx.currentTime + (delay || 0);
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = "sine"; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.12, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + dur);
+    } catch (e) { /* sound is optional — never break the site for it */ }
+  }
+  function showTwistPanel(id) {
+    ["twistEnd", "twistGlitch", "twistError", "twistReveal"].forEach(function (p) {
+      document.getElementById(p).classList.toggle("active", p === id);
+    });
+  }
+  function resetTwist() {
+    clearTimeout(twistTimer);
+    document.getElementById("twistStay").hidden = true;
+    document.getElementById("twistFill").style.width = "0%";
+    document.getElementById("msgHint").hidden = true;
+    showTwistPanel("twistEnd");
+  }
+  function startTwist() {
+    showTwistPanel("twistGlitch");
+    show("phase6");
+    playTone(180, 0.25, 0); playTone(120, 0.35, 0.22);
+    var fill = document.getElementById("twistFill");
+    fill.style.width = "0%";
+    var p = 0;
+    var grow = setInterval(function () {
+      p = Math.min(100, p + 8);
+      fill.style.width = p + "%";
+      if (p >= 100) clearInterval(grow);
+    }, 120);
+    twistTimer = setTimeout(function () {
+      document.getElementById("twistStay").hidden = false;
+      twistTimer = setTimeout(function () {
+        showTwistPanel("twistError");
+        show("phase6");
+        playTone(320, 0.2, 0); playTone(200, 0.3, 0.18);
+      }, 1400);
+    }, 1400);
+  }
+  document.getElementById("exitBtn").addEventListener("click", startTwist);
+  document.getElementById("twistBackBtn").addEventListener("click", function () { showCrazyPanel("crazyResult"); show("phase5"); });
+  document.getElementById("soundToggleBtn").addEventListener("click", function () {
+    soundOn = !soundOn;
+    this.textContent = soundOn ? "🔊 Sound: On" : "🔇 Sound: Off";
+    if (soundOn) playTone(660, 0.15, 0);
+  });
+  document.getElementById("fixBtn").addEventListener("click", function () {
+    showTwistPanel("twistReveal");
+    show("phase6");
+    confetti();
+    setTimeout(confetti, 350);
+    setTimeout(confetti, 700);
+    playTone(523, 0.18, 0); playTone(659, 0.18, 0.15); playTone(784, 0.3, 0.3);
+  });
+  document.getElementById("againBtn").addEventListener("click", restart);
+  document.getElementById("msgBtn").addEventListener("click", function () {
+    if (MESSAGE_LINK) {
+      window.open(MESSAGE_LINK, "_blank");
+    } else {
+      document.getElementById("msgHint").hidden = false;
+    }
+  });
 
   document.getElementById("openBtn").addEventListener("click", openLetter);
   document.getElementById("envelopeBtn").addEventListener("click", openLetter);
