@@ -124,6 +124,18 @@ footer .tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;fo
   .btn-primary{width:100%}
   .letter-body{font-size:16px;padding:20px}
 }
+/* Phase 4 — Secret Message, same design system */
+.secret-card .btn-ghost{margin-top:14px}
+.secret-card .envelope{margin-top:10px}
+.letter-body p.sig{font-family:Georgia,"Times New Roman",serif;font-weight:700;color:var(--rose-deep)}
+.typing-caret{display:inline-block;color:var(--rose-deep);animation:beat 1s ease-in-out infinite}
+.tap-hint{font-size:13px;color:var(--muted);font-weight:600;margin:-12px 0 18px}
+.reaction-prompt{font-family:Georgia,"Times New Roman",serif;font-size:20px;font-weight:700;color:var(--rose-deep);margin-bottom:14px}
+.secret-reactions .opt{text-align:center}
+.secret-reactions .reaction{min-height:40px}
+.secret-next{margin-top:6px}
+.secret-next .final-msg{margin-bottom:18px}
+
 /* Phase 3 — Compatibility Calculator, same design system */
 .compat-panel{display:none}
 .compat-panel.active{display:block;animation:fadeUp .55s ease both}

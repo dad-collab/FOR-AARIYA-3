@@ -12,11 +12,13 @@
     result: document.getElementById("screen-result"),
     compat: document.getElementById("screen-compat"),
     next: document.getElementById("screen-next"),
+    phase5: document.getElementById("screen-phase5"),
   };
   var progressItems = Array.prototype.slice.call(document.querySelectorAll("#progress li"));
-  var stepFor = { landing: 1, letter: 2, loading: 2, coming: 3, challenge: 4, quiz: 4, result: 4, compat: 4, next: 4 };
+  var stepFor = { landing: 1, letter: 2, loading: 2, coming: 3, challenge: 4, quiz: 4, result: 4, compat: 4, next: 4, phase5: 4 };
   var loadingTimer = null;
   var compatTimer = null, compatMsgTimer = null, compatResultTimer = null;
+  var secretTimer = null, secretDone = false;
 
   function show(name) {
     Object.keys(screens).forEach(function (k) { screens[k].classList.toggle("active", k === name); });
@@ -68,6 +70,8 @@
     clearInterval(compatMsgTimer);
     clearTimeout(compatResultTimer);
     clearTimeout(quizTimer);
+    clearInterval(secretTimer);
+    resetSecret();
     showCompatPanel("compatEntry");
     var fill = document.getElementById("loadFill");
     var pct = document.getElementById("loadPct");
@@ -346,8 +350,113 @@
   document.getElementById("compatAgainBtn").addEventListener("click", runCompatCalc);
   document.getElementById("compatBackBtn").addEventListener("click", function () { show("result"); });
   document.getElementById("compatNextBtn").addEventListener("click", function () { show("next"); });
-  document.getElementById("nextBackBtn").addEventListener("click", function () { showCompatPanel("compatResult"); show("compat"); });
-  document.getElementById("nextRestartBtn").addEventListener("click", restart);
+
+  /* ---------- Phase 4: A Secret Message From Aman ---------- */
+  var SECRET_PARAS = [
+    { t: "Achha Aariya, ek baat bolun? 😂" },
+    { t: "Waise toh main tujhe roz pareshan karta rehta hu, kabhi faltu ki bakwaas, kabhi random messages aur kabhi bina matlab ki teasing." },
+    { t: "Lekin sach mein, tu meri achhi dost hai." },
+    { t: "Tere saath baat karke kabhi boring feel nahi hota. Kabhi hasi-mazaak, kabhi arguments aur kabhi ek dusre ki taang kheenchna... 😂" },
+    { t: "Aur haan, zyada hawa mein mat udna. Itni tareef bhi nahi karunga!" },
+    { t: "Bas aise hi rehna aur apni bakchodi continue rakhna." },
+    { t: "From,", cls: "sig" },
+    { t: "Tera Best Friend,", cls: "sig" },
+    { t: "AMAN ❤️", cls: "sig" },
+  ];
+  function showSecretPanel(id) {
+    ["secretIntro", "secretLetter"].forEach(function (p) {
+      document.getElementById(p).classList.toggle("active", p === id);
+    });
+  }
+  function resetSecret() {
+    clearInterval(secretTimer);
+    secretDone = false;
+    var env = document.getElementById("secretEnvelopeBtn");
+    if (env) env.classList.remove("open");
+    document.getElementById("secretLetterBody").innerHTML = "";
+    document.getElementById("secretReactions").hidden = true;
+    document.getElementById("secretReaction").textContent = "";
+    document.getElementById("secretReaction").classList.remove("show");
+    document.getElementById("secretNext").hidden = true;
+    document.getElementById("secretTapHint").style.display = "";
+    showSecretPanel("secretIntro");
+  }
+  function renderSecretFull() {
+    var body = document.getElementById("secretLetterBody");
+    body.innerHTML = "";
+    SECRET_PARAS.forEach(function (para) {
+      var p = document.createElement("p");
+      if (para.cls) p.className = para.cls;
+      p.textContent = para.t;
+      body.appendChild(p);
+    });
+  }
+  function finishSecretLetter() {
+    if (secretDone) return;
+    secretDone = true;
+    clearInterval(secretTimer);
+    renderSecretFull();
+    document.getElementById("secretTapHint").style.display = "none";
+    document.getElementById("secretReactions").hidden = false;
+  }
+  function typeSecretLetter() {
+    clearInterval(secretTimer);
+    secretDone = false;
+    var body = document.getElementById("secretLetterBody");
+    body.innerHTML = "";
+    document.getElementById("secretReactions").hidden = true;
+    document.getElementById("secretReaction").textContent = "";
+    document.getElementById("secretReaction").classList.remove("show");
+    document.getElementById("secretNext").hidden = true;
+    document.getElementById("secretTapHint").style.display = "";
+    var pi = 0, ci = 0, pEl = null, caret = null;
+    secretTimer = setInterval(function () {
+      if (pi >= SECRET_PARAS.length) { finishSecretLetter(); return; }
+      if (!pEl) {
+        pEl = document.createElement("p");
+        if (SECRET_PARAS[pi].cls) pEl.className = SECRET_PARAS[pi].cls;
+        body.appendChild(pEl);
+        caret = document.createElement("span");
+        caret.className = "typing-caret";
+        caret.textContent = "▍";
+        pEl.appendChild(caret);
+      }
+      var text = SECRET_PARAS[pi].t;
+      if (ci < text.length) {
+        caret.before(document.createTextNode(text.charAt(ci)));
+        ci++;
+      } else {
+        caret.remove();
+        pEl = null; caret = null; pi++; ci = 0;
+      }
+    }, 14);
+  }
+  function openSecretLetter() {
+    var env = document.getElementById("secretEnvelopeBtn");
+    env.classList.add("open");
+    setTimeout(function () {
+      showSecretPanel("secretLetter");
+      show("next");
+      typeSecretLetter();
+    }, 650);
+  }
+  document.getElementById("openSecretBtn").addEventListener("click", openSecretLetter);
+  document.getElementById("secretEnvelopeBtn").addEventListener("click", openSecretLetter);
+  document.getElementById("secretBackBtn").addEventListener("click", function () { showCompatPanel("compatResult"); show("compat"); });
+  document.getElementById("secretLetterBody").addEventListener("click", finishSecretLetter);
+  document.getElementById("secretReplayBtn").addEventListener("click", typeSecretLetter);
+  Array.prototype.forEach.call(document.querySelectorAll("#secretReactions .opt"), function (b) {
+    b.addEventListener("click", function () {
+      var r = document.getElementById("secretReaction");
+      r.textContent = b.getAttribute("data-reaction");
+      r.classList.add("show");
+      document.getElementById("secretNext").hidden = false;
+      confetti();
+    });
+  });
+  document.getElementById("secretNextBtn").addEventListener("click", function () { show("phase5"); });
+  document.getElementById("next5BackBtn").addEventListener("click", function () { showSecretPanel("secretLetter"); show("next"); });
+  document.getElementById("next5RestartBtn").addEventListener("click", restart);
 
   document.getElementById("openBtn").addEventListener("click", openLetter);
   document.getElementById("envelopeBtn").addEventListener("click", openLetter);

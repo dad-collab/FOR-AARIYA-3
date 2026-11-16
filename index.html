@@ -180,15 +180,59 @@
       </div>
     </section>
 
-    <!-- 9 · PHASE 4 PLACEHOLDER (not built yet) -->
-    <section class="screen" id="screen-next" aria-label="Next surprise">
+    <!-- 9 · PHASE 4: A SECRET MESSAGE FROM AMAN -->
+    <section class="screen" id="screen-next" aria-label="Secret message">
+      <div class="card secret-card">
+        <!-- Intro -->
+        <div class="compat-panel active" id="secretIntro">
+          <p class="badge">💌 EK SECRET MESSAGE</p>
+          <h2>Wait Aariya... Ek Last Baat Hai 👀</h2>
+          <p class="subtitle">Aman ne tere liye kuch likha hai...</p>
+          <button class="envelope" id="secretEnvelopeBtn" type="button" aria-label="Open the secret envelope">
+            <span class="env-body">
+              <span class="env-letter">💌</span>
+              <span class="env-heart">❤️</span>
+            </span>
+            <span class="env-flap"></span>
+            <span class="env-seal">💗</span>
+          </button>
+          <p class="env-hint">Envelope par tap karo 👆</p>
+          <button class="btn-primary glow" id="openSecretBtn" type="button">OPEN KARKE DEKHTI HU 💌</button>
+          <button class="btn-ghost" id="secretBackBtn" type="button">← Compatibility report wapas dekho</button>
+        </div>
+        <!-- Letter -->
+        <div class="compat-panel" id="secretLetter">
+          <p class="badge">💌 AMAN KI SECRET CHITTHI</p>
+          <h2>Aman ki taraf se, Aariya ke liye ❤️</h2>
+          <div class="letter-body" id="secretLetterBody" title="Typing skip karne ke liye tap karo"></div>
+          <p class="tap-hint" id="secretTapHint">Letter par tap karo to poora ek saath padh lo 👆</p>
+          <div class="secret-reactions" id="secretReactions" hidden>
+            <p class="reaction-prompt">Acha bata Aariya, kaisa laga? 😂</p>
+            <div class="options">
+              <button class="opt" type="button" data-reaction="Aman: Bas itna hi reaction? 🥹😂">Awww, achha tha ❤️</button>
+              <button class="opt" type="button" data-reaction="Aman: Galti se serious ho gaya tha! 🤣">Itna emotional kab se ho gaya? 😂</button>
+              <button class="opt" type="button" data-reaction="Aman: Achha ji, abhi batata hu! 😂">Chup kar pagal 🤣</button>
+            </div>
+            <div class="reaction" id="secretReaction" role="status" aria-live="polite"></div>
+          </div>
+          <div class="secret-next" id="secretNext" hidden>
+            <p class="final-msg">Abhi khatam nahi hua madam! 👀</p>
+            <button class="btn-primary glow" id="secretNextBtn" type="button">NEXT SURPRISE DEKHAO 🎁</button>
+          </div>
+          <button class="btn-ghost" id="secretReplayBtn" type="button">↺ Letter phir se padho</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · PHASE 5 PLACEHOLDER (not built yet) -->
+    <section class="screen" id="screen-phase5" aria-label="Next surprise">
       <div class="card coming-card">
         <p class="big-emoji">🎁</p>
-        <h2>Phase 4 surprise is coming soon, Aariya!</h2>
-        <p class="subtitle">Phase 4 abhi ban raha hai — Aman kuch aur plan kar raha hai 👀<br>Tab tak apni compatibility report sambhal ke rakhna 😂</p>
+        <h2>Phase 5 surprise is coming soon, Aariya!</h2>
+        <p class="subtitle">Phase 5 abhi ban raha hai — Aman kuch aur plan kar raha hai 👀<br>Tab tak apna secret letter sambhal ke rakhna 😂</p>
         <div class="coming-actions">
-          <button class="btn-primary" id="nextBackBtn" type="button">← Compatibility report wapas dekho</button>
-          <button class="btn-ghost" id="nextRestartBtn" type="button">↺ Shuru se dekho</button>
+          <button class="btn-primary" id="next5BackBtn" type="button">← Secret letter wapas dekho</button>
+          <button class="btn-ghost" id="next5RestartBtn" type="button">↺ Shuru se dekho</button>
         </div>
       </div>
     </section>
