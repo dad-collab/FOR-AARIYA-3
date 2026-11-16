@@ -124,6 +124,29 @@ footer .tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;fo
   .btn-primary{width:100%}
   .letter-body{font-size:16px;padding:20px}
 }
+/* Phase 3 — Compatibility Calculator, same design system */
+.compat-panel{display:none}
+.compat-panel.active{display:block;animation:fadeUp .55s ease both}
+.name-cards{display:flex;gap:10px;align-items:stretch;justify-content:center;margin:6px 0 26px}
+.name-card{flex:1;background:rgba(255,255,255,.72);border:1px solid #ffe0ee;border-radius:20px;
+  padding:20px 10px;display:flex;flex-direction:column;gap:6px;align-items:center;
+  box-shadow:0 10px 24px rgba(232,67,147,.12)}
+.name-card .name-emoji{font-size:34px}
+.name-card b{font-family:Georgia,"Times New Roman",serif;font-size:24px;letter-spacing:1px;color:var(--rose-deep)}
+.name-card .name-heart{font-size:22px}
+.name-plus{align-self:center;font-family:Georgia,"Times New Roman",serif;font-size:30px;font-weight:700;color:var(--rose)}
+.compat-card .btn-ghost{margin-top:14px}
+.compat-pct{font-family:Georgia,"Times New Roman",serif;font-size:clamp(56px,14vw,84px);font-weight:700;
+  color:var(--rose-deep);line-height:1;margin:10px 0 4px}
+.compat-msg{min-height:26px;font-weight:700;color:var(--rose-deep);margin-top:14px}
+.compat-score{font-family:Georgia,"Times New Roman",serif;font-size:clamp(56px,14vw,84px);font-weight:700;
+  color:var(--rose-deep);line-height:1;margin:6px 0 10px}
+.compat-band{font-size:clamp(17px,3vw,21px);font-weight:700;color:var(--ink);line-height:1.5;margin-bottom:20px}
+#compatStats{margin-top:4px}
+@media (max-width:640px){
+  .name-card b{font-size:20px}
+}
+
 /* Phase 2 — same design system, no Phase 1 redesign */
 .prepared{font-family:Georgia,"Times New Roman",serif;font-size:19px;font-weight:700;color:var(--rose-deep);margin-bottom:12px}
 .quiz-note{color:var(--muted);font-weight:600;margin-bottom:24px}

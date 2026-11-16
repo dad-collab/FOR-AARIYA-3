@@ -139,14 +139,55 @@
       </div>
     </section>
 
-    <!-- 8 · PHASE 3 PLACEHOLDER (not built yet) -->
+    <!-- 8 · PHASE 3: COMPATIBILITY CALCULATOR -->
+    <section class="screen" id="screen-compat" aria-label="Compatibility calculator">
+      <div class="card compat-card">
+        <!-- Entry -->
+        <div class="compat-panel active" id="compatEntry">
+          <p class="badge">💗 AMAN &amp; AARIYA COMPATIBILITY</p>
+          <h2>Chalo ab compatibility check karte hain! 😂</h2>
+          <p class="subtitle">Dekhte hain Aman aur Aariya ki jodi kitni interesting hai.</p>
+          <div class="name-cards">
+            <div class="name-card"><span class="name-emoji">😎</span><b>AMAN</b><span class="name-heart">❤️</span></div>
+            <div class="name-plus">+</div>
+            <div class="name-card"><span class="name-emoji">👑</span><b>AARIYA</b><span class="name-heart">💗</span></div>
+          </div>
+          <button class="btn-primary glow" id="compatCalcBtn" type="button">CALCULATE KARO 👀</button>
+          <button class="btn-ghost" id="compatBackBtn" type="button">← Result wapas dekho</button>
+        </div>
+        <!-- Calculation -->
+        <div class="compat-panel" id="compatCalc">
+          <div class="hearts-loader" aria-hidden="true"><span>💗</span><span>💖</span><span>💗</span></div>
+          <h2>Compatibility calculate ho rahi hai...</h2>
+          <p class="compat-pct" id="compatPct">0%</p>
+          <div class="loadbar"><div class="loadbar-fill" id="compatFill"></div></div>
+          <p class="compat-msg" id="compatMsg">Aman ka data check ho raha hai...</p>
+        </div>
+        <!-- Result -->
+        <div class="compat-panel" id="compatResult">
+          <p class="big-emoji">💗</p>
+          <h2>Aman aur Aariya ki report aa gayi! 😂</h2>
+          <p class="compat-score" id="compatScore">--%</p>
+          <p class="compat-band" id="compatBand"></p>
+          <div class="stats" id="compatStats"></div>
+          <p class="fun-note">⚠️ Ye calculator sirf mazaak ke liye hai — Aman ne khud banaya hai 😂</p>
+          <p class="final-msg">Waise calculator kuch bhi bole, asli compatibility toh tum dono hi jaante ho.</p>
+          <div class="coming-actions">
+            <button class="btn-primary glow" id="compatAgainBtn" type="button">EK AUR BAAR CHECK KARO 🔄</button>
+            <button class="btn-primary" id="compatNextBtn" type="button">NEXT SURPRISE 🎁</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 · PHASE 4 PLACEHOLDER (not built yet) -->
     <section class="screen" id="screen-next" aria-label="Next surprise">
       <div class="card coming-card">
         <p class="big-emoji">🎁</p>
-        <h2>Next surprise is coming soon, Aariya!</h2>
-        <p class="subtitle">Phase 3 abhi ban raha hai — Aman kuch aur plan kar raha hai 👀<br>Tab tak apna Friendship Report sambhal ke rakhna 😂</p>
+        <h2>Phase 4 surprise is coming soon, Aariya!</h2>
+        <p class="subtitle">Phase 4 abhi ban raha hai — Aman kuch aur plan kar raha hai 👀<br>Tab tak apni compatibility report sambhal ke rakhna 😂</p>
         <div class="coming-actions">
-          <button class="btn-primary" id="nextBackBtn" type="button">← Result wapas dekho</button>
+          <button class="btn-primary" id="nextBackBtn" type="button">← Compatibility report wapas dekho</button>
           <button class="btn-ghost" id="nextRestartBtn" type="button">↺ Shuru se dekho</button>
         </div>
       </div>

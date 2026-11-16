@@ -10,11 +10,13 @@
     challenge: document.getElementById("screen-challenge"),
     quiz: document.getElementById("screen-quiz"),
     result: document.getElementById("screen-result"),
+    compat: document.getElementById("screen-compat"),
     next: document.getElementById("screen-next"),
   };
   var progressItems = Array.prototype.slice.call(document.querySelectorAll("#progress li"));
-  var stepFor = { landing: 1, letter: 2, loading: 2, coming: 3, challenge: 4, quiz: 4, result: 4, next: 4 };
+  var stepFor = { landing: 1, letter: 2, loading: 2, coming: 3, challenge: 4, quiz: 4, result: 4, compat: 4, next: 4 };
   var loadingTimer = null;
+  var compatTimer = null, compatMsgTimer = null, compatResultTimer = null;
 
   function show(name) {
     Object.keys(screens).forEach(function (k) { screens[k].classList.toggle("active", k === name); });
@@ -62,7 +64,11 @@
 
   function restart() {
     clearInterval(loadingTimer);
+    clearInterval(compatTimer);
+    clearInterval(compatMsgTimer);
+    clearTimeout(compatResultTimer);
     clearTimeout(quizTimer);
+    showCompatPanel("compatEntry");
     var fill = document.getElementById("loadFill");
     var pct = document.getElementById("loadPct");
     if (fill) fill.style.width = "0%";
@@ -126,6 +132,15 @@
     // Dodge far enough that the cursor is no longer over the button, but
     // never outside the visible screen (viewport clamp, not the card —
     // a full-width button cannot move inside its own card).
+    // NOTE: transform is absolute, not cumulative — measure the button's
+    // layout position first (clear the old transform, same JS tick so no
+    // flicker), otherwise the clamp uses the already-dodged rect and the
+    // button can end up partly off-screen. The .3s dodge transition must
+    // be off while measuring, or getBoundingClientRect() returns the
+    // mid-animation position instead of the layout position.
+    btn.style.animation = "none"; // entrance animation's fill would override the dodge transform
+    btn.style.transition = "none";
+    btn.style.transform = "";
     var rect = btn.getBoundingClientRect();
     var dx = (Math.random() < 0.5 ? -1 : 1) * (70 + Math.random() * 80);
     // Down only: NO is the lower option, moving up would cover the YES button above it.
@@ -138,7 +153,7 @@
     dy = Math.max(minY, Math.min(maxY, dy));
     if (maxX - minX < 20) dx = 0;
     if (maxY - minY < 20) dy = 0;
-    btn.style.animation = "none"; // entrance animation's fill would override the dodge transform
+    btn.style.transition = ""; // restore the .3s dodge animation
     btn.style.transform = "translate(" + dx + "px," + dy + "px)";
     showDodgeMessage(DODGE_MESSAGES[Math.floor(Math.random() * DODGE_MESSAGES.length)]);
     return true;
@@ -246,8 +261,92 @@
   document.getElementById("challengeBackBtn").addEventListener("click", function () { show("coming"); });
   document.getElementById("quizRestartBtn").addEventListener("click", startChallenge);
   document.getElementById("retakeBtn").addEventListener("click", startChallenge);
-  document.getElementById("unlockBtn").addEventListener("click", function () { show("next"); });
-  document.getElementById("nextBackBtn").addEventListener("click", function () { show("result"); });
+  document.getElementById("unlockBtn").addEventListener("click", function () { showCompatEntry(); });
+
+  /* ---------- Phase 3: Aman & Aariya Compatibility Calculator ---------- */
+  var CALC_MESSAGES = [
+    "Aman ka data check ho raha hai...",
+    "Aariya ki settings scan ho rahi hain...",
+    "Dono ka pagalpan calculate ho raha hai...",
+    "System confused hai 😂",
+    "Final result ready!",
+  ];
+  function showCompatPanel(id) {
+    ["compatEntry", "compatCalc", "compatResult"].forEach(function (p) {
+      document.getElementById(p).classList.toggle("active", p === id);
+    });
+  }
+  function showCompatEntry() { clearInterval(compatTimer); clearInterval(compatMsgTimer); showCompatPanel("compatEntry"); show("compat"); }
+  function compatBand(score) {
+    if (score === 100) return "ERROR! Itni compatibility kaise? System hang ho gaya! 🤣";
+    if (score >= 91) return "System ko lagta hai tum dono kaafi special dost ho! ❤️";
+    if (score >= 81) return "Ye friendship kuch zyada hi interesting hai! 👀";
+    if (score >= 71) return "Achhi bonding hai, bas thodi nok-jhok extra hai!";
+    return "Thodi understanding ki zarurat hai 😂";
+  }
+  function randStat() { return 55 + Math.floor(Math.random() * 45); } // 55–99
+  function showCompatResult() {
+    var score = 60 + Math.floor(Math.random() * 41); // 60–100, different every time
+    document.getElementById("compatScore").textContent = score + "%";
+    document.getElementById("compatBand").textContent = compatBand(score);
+    var stats = [
+      { label: "💗 Friendship Level", value: randStat() },
+      { label: "😂 Pagalpan Compatibility", value: randStat() },
+      { label: "🤝 Understanding Level", value: randStat() },
+      { label: "🎉 Masti Percentage", value: randStat() },
+      { label: "😤 Nok-Jhok Level", value: randStat() },
+    ];
+    var box = document.getElementById("compatStats");
+    box.innerHTML = "";
+    stats.forEach(function (s) {
+      var row = document.createElement("div");
+      row.className = "stat-row";
+      row.innerHTML = '<label><span>' + s.label + '</span><b>' + s.value + '%</b></label>' +
+        '<div class="stat-bar"><div class="stat-fill" data-w="' + s.value + '"></div></div>';
+      box.appendChild(row);
+    });
+    try { sessionStorage.setItem("love-exe-compat", String(score)); } catch (e) {}
+    showCompatPanel("compatResult");
+    show("compat");
+    confetti();
+    setTimeout(function () {
+      Array.prototype.forEach.call(document.querySelectorAll("#compatStats .stat-fill"), function (f) { f.style.width = f.getAttribute("data-w") + "%"; });
+    }, 120);
+  }
+  function runCompatCalc() {
+    clearInterval(compatTimer);
+    clearInterval(compatMsgTimer);
+    clearTimeout(compatResultTimer);
+    showCompatPanel("compatCalc");
+    show("compat");
+    var pct = document.getElementById("compatPct");
+    var fill = document.getElementById("compatFill");
+    var msg = document.getElementById("compatMsg");
+    var p = 0, mi = 0;
+    pct.textContent = "0%";
+    fill.style.width = "0%";
+    msg.textContent = CALC_MESSAGES[0];
+    compatMsgTimer = setInterval(function () {
+      mi = Math.min(CALC_MESSAGES.length - 1, mi + 1);
+      msg.textContent = CALC_MESSAGES[mi];
+    }, 700);
+    compatTimer = setInterval(function () {
+      p = Math.min(100, p + 1 + Math.floor(Math.random() * 3));
+      pct.textContent = p + "%";
+      fill.style.width = p + "%";
+      if (p >= 100) {
+        clearInterval(compatTimer);
+        clearInterval(compatMsgTimer);
+        msg.textContent = CALC_MESSAGES[CALC_MESSAGES.length - 1];
+        compatResultTimer = setTimeout(showCompatResult, 600);
+      }
+    }, 38);
+  }
+  document.getElementById("compatCalcBtn").addEventListener("click", runCompatCalc);
+  document.getElementById("compatAgainBtn").addEventListener("click", runCompatCalc);
+  document.getElementById("compatBackBtn").addEventListener("click", function () { show("result"); });
+  document.getElementById("compatNextBtn").addEventListener("click", function () { show("next"); });
+  document.getElementById("nextBackBtn").addEventListener("click", function () { showCompatPanel("compatResult"); show("compat"); });
   document.getElementById("nextRestartBtn").addEventListener("click", restart);
 
   document.getElementById("openBtn").addEventListener("click", openLetter);
