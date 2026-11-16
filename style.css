@@ -31,8 +31,9 @@ body{
 
 .topbar{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;
   max-width:1080px;margin:0 auto;padding:18px 20px;flex-wrap:wrap}
-.logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:26px;letter-spacing:.5px}
-.logo span{color:var(--rose-deep)}
+.logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-style:italic;font-size:28px;letter-spacing:.5px;
+  background:linear-gradient(135deg,#ff6b9d,#e84393,#a78bfa);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 .top-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .progress{display:flex;list-style:none;gap:6px;background:var(--glass);border:1px solid var(--glass-border);
   backdrop-filter:blur(14px);border-radius:999px;padding:6px 10px;box-shadow:0 6px 18px rgba(232,67,147,.10)}
@@ -159,6 +160,8 @@ footer .tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;fo
 .glitch-sub{font-size:clamp(17px,3vw,21px);font-weight:700;color:#ffd6e8;line-height:1.5;margin-bottom:20px}
 .glitch-panel .loadbar{background:#2c2140}
 .error-title{color:#d81b60 !important}
+/* msgHint sits below the buttons — never pull it up under them (was overlapping) */
+#msgHint{margin:16px 0 0;font-size:14px}
 .twist-card .stats{margin-top:6px}
 #twistReveal .letter-body{text-align:center}
 #twistReveal .letter-body p.sig{text-align:center}
