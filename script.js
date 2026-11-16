@@ -120,15 +120,9 @@
     reaction.classList.add("show");
   }
 
+  // NO dodges FOREVER — it can never be pressed, Aariya must press YES.
   function dodgeNo(btn) {
-    if (dodgeCount >= 3) return false;
     dodgeCount++;
-    if (dodgeCount >= 3) {
-      btn.style.transform = "";
-      btn.classList.remove("dodge-btn");
-      showDodgeMessage("Ab theek hai — NO dabaa sakti ho 😂");
-      return false;
-    }
     // Dodge far enough that the cursor is no longer over the button, but
     // never outside the visible screen (viewport clamp, not the card —
     // a full-width button cannot move inside its own card).
@@ -183,10 +177,10 @@
       if (isNo) {
         b.classList.add("dodge-btn");
         b.addEventListener("mouseenter", function () { dodgeNo(b); });
-        b.addEventListener("touchstart", function (e) { if (dodgeCount < 3) { e.preventDefault(); dodgeNo(b); } }, { passive: false });
+        b.addEventListener("touchstart", function (e) { e.preventDefault(); dodgeNo(b); }, { passive: false });
       }
       b.addEventListener("click", function (e) {
-        if (isNo && dodgeCount < 3) { e.preventDefault(); dodgeNo(b); return; }
+        if (isNo) { e.preventDefault(); dodgeNo(b); return; }
         b.style.transform = "";
         answerQuestion(b, oi);
       });
