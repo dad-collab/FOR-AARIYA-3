@@ -29,9 +29,10 @@ python3 -m http.server 8000
 ## Phase 2 — Aariya's Funny Challenge
 
 - Challenge welcome: “Welcome to Aariya's Test! 😂” → **START MY TEST 😎**
-- 6 funny questions, one at a time, with animated answer buttons, a progress bar and question number.
+- 7 funny questions, one at a time, with animated answer buttons, a progress bar and question number.
+- NO button dodge: a NO answer dodges on hover/touch with a random funny message, stays inside the visible screen, and after 3 dodges it can be clicked normally. YES and other buttons work normally.
 - After every answer: a funny reaction (answer-specific, sometimes plus a random one) + confetti, then the next question.
-- Final result: “TEST COMPLETED AARIYA! 🎉” + Friendship Personality Report — Drama, Innocence, Attitude and Aman Ko Pareshan Karne Ki Ability, calculated from her answers (just for fun) — plus **UNLOCK NEXT SURPRISE 🎁** (Phase 3 placeholder, not built yet).
+- Final screen: “Bas Aariya, bahut ho gaya! 😂” + Friendship Personality Report — Drama, Innocence, Attitude and Aman Ko Pareshan Karne Ki Ability, calculated from her answers (just for fun) — plus **CHALO AAGE DEKHTE HAIN 😂** (Phase 3 placeholder, not built yet).
 - Answers are stored for the session (in memory + sessionStorage). Restart the challenge any time; the global Restart goes back to the landing page. Phase 1 is unchanged.
 
 ## Deploy (GitHub Pages)

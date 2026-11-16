@@ -74,24 +74,34 @@
 
   /* ---------- Phase 2: Aariya's Funny Challenge ---------- */
   var QUESTIONS = [
-    { q: "Aariya, are you always innocent?", options: [
-      { t: "Yes, 100% 😇", r: "Aariya, itna jhoot? 😂", s: { innocence: 18, attitude: -6 } },
-      { t: "Innocent? Me? 😂", r: "At least honest to ho, madam! 😂", s: { innocence: -8, attitude: 12 } } ] },
-    { q: "Who is more intelligent?", options: [
-      { t: "Obviously Me 👑", r: "Your attitude has been detected! 😎", s: { attitude: 16, drama: 6 } },
-      { t: "Aman, I guess 😂", r: "Madam, answer recorded successfully!", s: { innocence: 8, pareshan: -4 } } ] },
-    { q: "How much drama do you have?", options: [
-      { t: "Zero drama 😇", r: "Expected answer, not surprised! 🤣", s: { drama: -14, innocence: 10 } },
-      { t: "Full Bollywood package 🎬", r: "Aariya's drama level is increasing!", s: { drama: 20, attitude: 8 } } ] },
-    { q: "If Aman irritates you, what will you do?", options: [
-      { t: "Ignore him 🙄", r: "Aman is reviewing your answer... 👀", s: { attitude: 12, pareshan: 8 } },
-      { t: "Give him a lecture 😂", r: "Aman ko lecture? Bechara Aman! 😂", s: { drama: 10, pareshan: 14 } } ] },
-    { q: "Who is your favourite best friend?", options: [
-      { t: "Aman ❤️", r: "Correct answer! Aman khush ho gaya ❤️", s: { innocence: 10, pareshan: -6 } },
-      { t: "I need more options 😂", r: "Options khatam, madam — sirf Aman hai! 😂", s: { attitude: 14, drama: 6 } } ] },
-    { q: "Do you enjoy annoying Aman?", options: [
-      { t: "Never! 😇", r: "Aariya, itna jhoot? 😂", s: { innocence: 14, pareshan: -12 } },
-      { t: "It's my favourite hobby 🤣", r: "Aman ko pareshan karna — certified hobby! 🤣", s: { pareshan: 20, drama: 8 } } ] },
+    { q: "Aariya, sach bata... thodi pagal hai na? 😂", options: [
+      { t: "Haan, thodi si 😂", r: "Dekha! Khud maan liya 😂", s: { drama: 12, innocence: -6 } },
+      { t: "NO 🙄", r: "Aariya, itna jhoot? 😂", s: { attitude: 14, innocence: 6 } } ] },
+    { q: "Do you Love me? 👀", options: [
+      { t: "Yes ❤️", r: "Aman khush ho gaya ❤️", s: { innocence: 12, pareshan: -6 } },
+      { t: "NO 🙄", r: "Itni nafrat bhi mat dikhao madam!", s: { attitude: 16, drama: 6 } } ] },
+    { q: "Aman raja jaisa feel hota? 👑", options: [
+      { t: "Yes ❤️", r: "Raja Aman, hajir ho! 👑", s: { innocence: 8, pareshan: -4 } },
+      { t: "NO 😭", r: "Aman is reviewing your answer... 👀", s: { attitude: 10, drama: 8 } } ] },
+    { q: "Agar Aman 2 din message na kare toh notice karegi?", options: [
+      { t: "Haan, obviously 👀", r: "Madam, answer recorded successfully!", s: { innocence: 10, pareshan: -6 } },
+      { t: "NO 😎", r: "Your attitude has been detected! 😎", s: { attitude: 14, pareshan: 8 } } ] },
+    { q: "Roblox mein pitegi ya real life mein? 😂", options: [
+      { t: "Snap par 👻", r: "Snap par bhi nahi bachogi! 👻", s: { drama: 12, attitude: 6 } },
+      { t: "Roblox mein 🎮", r: "Roblox mein toh Aman hi jeetega! 🎮", s: { pareshan: 12, drama: 6 } } ] },
+    { q: "Aman ki baaton par kabhi hasi aati bhi hai?", options: [
+      { t: "Kabhi kabhi 🤣", r: "Kabhi kabhi hi sahi, hasi toh aati hai! 🤣", s: { innocence: 10, drama: 4 } },
+      { t: "Bilkul nahi 😭", r: "Expected answer, not surprised! 🤣", s: { attitude: 12, pareshan: 6 } } ] },
+    { q: "Last question... Aman achha dost hai na?", options: [
+      { t: "Haan ❤️", r: "Correct answer! Best friends forever ❤️", s: { innocence: 12, pareshan: -6 } },
+      { t: "NO 🙄", r: "Aariya, itna jhoot? 😂", s: { attitude: 16, drama: 6 } } ] },
+  ];
+  var DODGE_MESSAGES = [
+    "Pakad ke dikhao 😂",
+    "NO bhaag gaya! 🤣",
+    "Itni nafrat bhi mat dikhao madam!",
+    "Aman ne button ko bhi bhaga diya 😂",
+    "Ab kya karogi? 👀",
   ];
   var RANDOM_REACTIONS = [
     "Aariya, itna jhoot? 😂",
@@ -102,6 +112,43 @@
     "Aariya's drama level is increasing!",
   ];
   var quizIndex = 0, answers = [], quizTimer = null, quizLocked = false;
+  var dodgeCount = 0;
+
+  function showDodgeMessage(text) {
+    var reaction = document.getElementById("quizReaction");
+    reaction.textContent = text;
+    reaction.classList.add("show");
+  }
+
+  function dodgeNo(btn) {
+    if (dodgeCount >= 3) return false;
+    dodgeCount++;
+    if (dodgeCount >= 3) {
+      btn.style.transform = "";
+      btn.classList.remove("dodge-btn");
+      showDodgeMessage("Ab theek hai — NO dabaa sakti ho 😂");
+      return false;
+    }
+    // Dodge far enough that the cursor is no longer over the button, but
+    // never outside the visible screen (viewport clamp, not the card —
+    // a full-width button cannot move inside its own card).
+    var rect = btn.getBoundingClientRect();
+    var dx = (Math.random() < 0.5 ? -1 : 1) * (70 + Math.random() * 80);
+    // Down only: NO is the lower option, moving up would cover the YES button above it.
+    var dy = 45 + Math.random() * 55;
+    var minX = 8 - rect.left;
+    var maxX = window.innerWidth - 8 - rect.right;
+    var minY = 8 - rect.top;
+    var maxY = window.innerHeight - 8 - rect.bottom;
+    dx = Math.max(minX, Math.min(maxX, dx));
+    dy = Math.max(minY, Math.min(maxY, dy));
+    if (maxX - minX < 20) dx = 0;
+    if (maxY - minY < 20) dy = 0;
+    btn.style.animation = "none"; // entrance animation's fill would override the dodge transform
+    btn.style.transform = "translate(" + dx + "px," + dy + "px)";
+    showDodgeMessage(DODGE_MESSAGES[Math.floor(Math.random() * DODGE_MESSAGES.length)]);
+    return true;
+  }
 
   function confetti() {
     var colors = ["#ff6b9d", "#a78bfa", "#ffd9b8", "#ff8fb8", "#c9b8ff"];
@@ -120,6 +167,7 @@
 
   function renderQuestion() {
     quizLocked = false;
+    dodgeCount = 0;
     var item = QUESTIONS[quizIndex];
     document.getElementById("quizCount").textContent = "Question " + (quizIndex + 1) + " of " + QUESTIONS.length;
     document.getElementById("quizFill").style.width = ((quizIndex) / QUESTIONS.length * 100) + "%";
@@ -131,7 +179,17 @@
     item.options.forEach(function (opt, oi) {
       var b = document.createElement("button");
       b.type = "button"; b.className = "opt"; b.textContent = opt.t;
-      b.addEventListener("click", function () { answerQuestion(b, oi); });
+      var isNo = opt.t.indexOf("NO") === 0;
+      if (isNo) {
+        b.classList.add("dodge-btn");
+        b.addEventListener("mouseenter", function () { dodgeNo(b); });
+        b.addEventListener("touchstart", function (e) { if (dodgeCount < 3) { e.preventDefault(); dodgeNo(b); } }, { passive: false });
+      }
+      b.addEventListener("click", function (e) {
+        if (isNo && dodgeCount < 3) { e.preventDefault(); dodgeNo(b); return; }
+        b.style.transform = "";
+        answerQuestion(b, oi);
+      });
       box.appendChild(b);
     });
   }

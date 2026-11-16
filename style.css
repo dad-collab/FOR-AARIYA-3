@@ -134,12 +134,13 @@ footer .tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;fo
 .options{display:grid;gap:12px;margin:6px 0 8px}
 .opt{border:2px solid #ffd3e6;background:rgba(255,255,255,.78);color:var(--ink);cursor:pointer;
   font-family:inherit;font-weight:700;font-size:16px;padding:16px 20px;border-radius:18px;text-align:left;
-  transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;animation:fadeUp .4s ease both}
+  transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;animation:fadeUp .4s ease}
 .opt:nth-child(2){animation-delay:.08s}
 .opt:hover{transform:translateY(-2px) scale(1.01);border-color:var(--rose);box-shadow:0 10px 22px rgba(232,67,147,.18)}
 .opt:active{transform:scale(.98)}
 .opt:disabled{cursor:default;opacity:.65}
 .opt.picked{border-color:var(--rose-deep);background:linear-gradient(135deg,#ffe3ef,#f3e8ff);box-shadow:0 12px 26px rgba(232,67,147,.28);opacity:1}
+.dodge-btn{transition:transform .3s ease,border-color .18s ease,background .18s ease;will-change:transform;position:relative;z-index:2;touch-action:manipulation}
 .reaction{min-height:52px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;
   color:var(--rose-deep);padding:8px 6px}
 .reaction.show{animation:fadeUp .35s ease both}
